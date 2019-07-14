@@ -43,6 +43,9 @@ function hubChannel(conn: signalR.HubConnection) {
 }
 
 function* hubSaga(action: AuthSetTokenAction) {
+  if (!action.jwt)
+    return
+
   const connection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:44304/roomHub', { accessTokenFactory: () => action.jwt })
       .build()

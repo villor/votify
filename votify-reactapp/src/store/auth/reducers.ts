@@ -24,7 +24,10 @@ export default function authReducer(
     case AUTH_ERROR:
       return {...state, error: action.error}
     case AUTH_SET_TOKEN:
-      return {...state, authenticated: true, jwt: action.jwt, claims: jwt_decode(action.jwt)}
+      if (action.jwt) {
+        return {...state, authenticated: true, jwt: action.jwt, claims: jwt_decode(action.jwt)}
+      }
+      return {...state, authenticated: false, jwt: undefined, claims: undefined }
     case AUTH_DONE:
       return {...state, loading: false}
     case AUTH_LOGIN:

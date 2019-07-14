@@ -8,7 +8,7 @@ export function loginRedirect(): void {
     .then(r => r.json())
     .then(tokenInfo => {
       const state = Math.random().toString(36).substring(2, 15)
-      window.localStorage.setItem('spotifyPendingAuth', JSON.stringify({
+      window.sessionStorage.setItem('spotifyPendingAuth', JSON.stringify({
         state: state,
         origin: window.location.href
       }))
@@ -24,12 +24,12 @@ export function loginRedirect(): void {
  * @returns true if there was a pending auth and the user will be redirected, otherwise false
  */
 export function checkPendingAuth(): boolean {
-  const pendingAuth = JSON.parse(window.localStorage.getItem('spotifyPendingAuth') || 'null')
+  const pendingAuth = JSON.parse(window.sessionStorage.getItem('spotifyPendingAuth') || 'null')
   if (pendingAuth) {
-    window.localStorage.removeItem('spotifyPendingAuth')
+    window.sessionStorage.removeItem('spotifyPendingAuth')
 
     const urlParams = new URLSearchParams(window.location.search);
-    window.localStorage.setItem('spotifyCallback', JSON.stringify({
+    window.sessionStorage.setItem('spotifyCallback', JSON.stringify({
       code: urlParams.get('code'),
       error: urlParams.get('error') || (urlParams.get('state') !== pendingAuth.state ? 'state_mismatch' : null)
     }));
@@ -46,9 +46,9 @@ export function checkPendingAuth(): boolean {
  * @returns A promise containing the jwt token, or null if no callback was found
  */ 
 export async function getTokenFromSpotifyCallback(): Promise<string | null> {
-  const spotifyCallback = JSON.parse(window.localStorage.getItem('spotifyCallback') || 'null')
+  const spotifyCallback = JSON.parse(window.sessionStorage.getItem('spotifyCallback') || 'null')
   if (spotifyCallback) {
-    window.localStorage.removeItem('spotifyCallback')
+    window.sessionStorage.removeItem('spotifyCallback')
     if (spotifyCallback.error) {
       throw new Error('Spotify callback error: ' + spotifyCallback.error)
     } else {

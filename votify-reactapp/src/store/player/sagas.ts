@@ -1,7 +1,7 @@
 import { eventChannel, END } from 'redux-saga'
 import { takeLatest, select, call, take, put, race, all, takeEvery, apply } from 'redux-saga/effects'
 import { AppState } from '..';
-import { AUTH_SET_TOKEN } from '../auth/types';
+import { AUTH_SET_TOKEN, AuthSetTokenAction } from '../auth/types';
 import {
   PlayerInitAction,
   PLAYER_INIT,
@@ -89,7 +89,7 @@ function* playerFlow() {
     let prevState: Spotify.PlaybackState | null = null
     try {
       while (true) {
-        const { playerAction, hubNewConnectionAction } = yield race({
+        const { playerAction, hubNewConnectionAction, authSetTokenAction } = yield race({
           playerAction: take(chan),
           hubNewConnectionAction: take(HUB_NEW_CONNECTION),
           authSetTokenAction: take(AUTH_SET_TOKEN)
@@ -111,12 +111,17 @@ function* playerFlow() {
           const state: Spotify.PlaybackState = yield apply(player, player.getCurrentState, [])
           yield call(updatePlayerStateSaga, state)
         } else {
-          accessToken = yield select(getAccessToken)
+          if ((authSetTokenAction as AuthSetTokenAction).jwt) {
+            accessToken = yield select(getAccessToken)
+          } else {
+            return
+          }
         }
       }
     } finally {
       player.disconnect()
       chan.close()
+      yield put({ type: PLAYER_NOT_READY })
     }
   })
 }
