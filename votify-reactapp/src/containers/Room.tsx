@@ -21,6 +21,7 @@ export const Room: React.FC<RoomProps> = (props) => {
   return <div>
     <button onClick={() => dispatch({ type: 'PLAYER_INIT', name: 'Votify' })}>PLAYER_INIT</button>
     <button onClick={() => dispatch({ type: 'PLAYER_PLAY_NEXT' })}>PLAY_NEXT</button>
+    <button onClick={() => dispatch({ type: 'AUTH_LOGOUT', jwt: null })}>Log out</button>
     <div>Loading: {roomState.loading ? 'true' : 'false'}</div>
     <div>Code: {roomState.code}</div>
     <div>Name: {roomState.name}</div>

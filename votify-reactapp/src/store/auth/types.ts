@@ -22,6 +22,7 @@ export const AUTH_ERROR = 'AUTH_ERROR'
 export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN'
 export const AUTH_DONE = 'AUTH_DONE'
 export const AUTH_LOGIN = 'AUTH_LOGIN'
+export const AUTH_LOGOUT = 'AUTH_LOGOUT'
 
 interface AuthStartAction {
   type: typeof AUTH_START
@@ -45,4 +46,8 @@ interface AuthLoginAction {
   type: typeof AUTH_LOGIN
 }
 
-export type AuthAction = AuthStartAction | AuthErrorAction | AuthSetTokenAction | AuthDoneAction | AuthLoginAction
+interface AuthLogoutAction {
+  type: typeof AUTH_LOGOUT
+}
+
+export type AuthAction = AuthStartAction | AuthErrorAction | AuthSetTokenAction | AuthDoneAction | AuthLoginAction | AuthLogoutAction
