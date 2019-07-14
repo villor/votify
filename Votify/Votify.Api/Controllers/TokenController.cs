@@ -69,7 +69,17 @@ namespace Votify.Api.Controllers
         [HttpGet, Route("refresh")]
         public async Task<ActionResult> RefreshToken([FromQuery(Name = "refreshToken")] string refreshToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Ok(new
+                {
+                    Token = await _authService.RefreshTokenAsync(refreshToken)
+                });
+            }
+            catch
+            {
+                return Unauthorized();
+            }
         }
     }
 }

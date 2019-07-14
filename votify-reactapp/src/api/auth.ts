@@ -68,3 +68,14 @@ export async function getTokenFromSpotifyCallback(): Promise<string | null> {
   }
   return null
 }
+
+export async function refreshToken(refreshToken: string): Promise<string> {
+  const tokenData = await fetch(apiBase + 'token/refresh?refreshToken=' + refreshToken, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }).then(r => r.json())
+  return tokenData.token
+}

@@ -6,5 +6,6 @@ namespace Votify.Api.Services
     public interface IAuthService
     {
         Task<string> RequestTokenAsync(TokenRequest tokenRequest);
+        Task<string> RefreshTokenAsync(string refreshToken);
     }
 }

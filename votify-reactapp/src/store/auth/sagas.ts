@@ -1,7 +1,10 @@
-import { all, put, takeLatest, call, take, apply } from 'redux-saga/effects'
-import { loginRedirect, checkPendingAuth, getTokenFromSpotifyCallback } from '../../api/auth'
+import { all, put, takeLatest, call, take, apply, select } from 'redux-saga/effects'
+import { loginRedirect, checkPendingAuth, getTokenFromSpotifyCallback, refreshToken } from '../../api/auth'
 import { eventChannel } from 'redux-saga';
 import { AUTH_START, AUTH_SET_TOKEN, AUTH_ERROR, AUTH_DONE, AUTH_LOGIN, AUTH_LOGOUT } from './types';
+import { AppState } from '..';
+
+const getRefreshToken = (state: AppState) => state.auth.claims!.spotifyRefreshToken
 
 function localStorageTokenChannel() {
   return eventChannel(emit => {
@@ -56,10 +59,20 @@ function* watchLogout() {
   })
 }
 
+function* watchRefreshToken() {
+  yield takeLatest('AUTH_REFRESH_TOKEN', function* () {
+    const rToken: string = yield select(getRefreshToken)
+    const jwt = yield call(refreshToken, rToken)
+    yield put({ type: AUTH_SET_TOKEN, jwt })
+    yield apply(window.localStorage, 'setItem', ['jwt', jwt])
+  });
+}
+
 export default function* authSaga() {
   yield all([
     authFlow(),
     watchLogin(),
     watchLogout(),
+    watchRefreshToken(),
   ])
 }

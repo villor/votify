@@ -10,6 +10,7 @@ using Votify.Api.SettingsModels;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using Votify.Api.ApiModels;
+using Votify.Api.SpotifyModels;
 
 namespace Votify.Api.Services
 {
@@ -24,9 +25,8 @@ namespace Votify.Api.Services
             _spotifyService = spotifyService;
         }
 
-        public async Task<string> RequestTokenAsync(TokenRequest tokenRequest)
+        private async Task<string> CreateToken(SpotifyTokens spotifyTokens)
         {
-            var spotifyTokens = await _spotifyService.RequestTokensAsync(tokenRequest);
             _spotifyService.AccessToken = spotifyTokens.AccessToken;
 
             var me = await _spotifyService.GetMeAsync();
@@ -53,6 +53,18 @@ namespace Votify.Api.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
+
+        public async Task<string> RequestTokenAsync(TokenRequest tokenRequest)
+        {
+            var spotifyTokens = await _spotifyService.RequestTokensAsync(tokenRequest);
+            return await CreateToken(spotifyTokens);
+        }
+
+        public async Task<string> RefreshTokenAsync(string refreshToken)
+        {
+            var spotifyTokens = await _spotifyService.RefreshTokenAsync(refreshToken);
+            return await CreateToken(spotifyTokens);
         }
     }
 }

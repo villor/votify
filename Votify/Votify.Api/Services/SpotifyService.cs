@@ -50,6 +50,35 @@ namespace Votify.Api.Services
             throw new UnauthorizedAccessException("Failed to get tokens from Spotify Web API");
         }
 
+        public async Task<SpotifyTokens> RefreshTokenAsync(string refreshToken)
+        {
+            var spotifySettings = _config.GetSection("Spotify").Get<SpotifySettings>();
+            var client = _clientFactory.CreateClient();
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri("https://accounts.spotify.com/api/token"),
+                Content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    { "grant_type", "refresh_token" },
+                    { "refresh_token", refreshToken },
+                    { "client_id", spotifySettings.ClientId },
+                    { "client_secret", spotifySettings.ClientSecret }
+                })
+            };
+
+            var response = await client.SendAsync(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var spotifyTokens = await response.Content.ReadAsAsync<SpotifyTokens>();
+                spotifyTokens.RefreshToken = refreshToken;
+                return spotifyTokens;
+            }
+
+            throw new UnauthorizedAccessException("Failed to refresh token from Spotify");
+        }
+
         public async Task<UserPrivate> GetMeAsync()
         {
             if (AccessToken == null)
