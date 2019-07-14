@@ -11,7 +11,7 @@ import {
 
 const initialState: AuthState = {
   authenticated: false,
-  loading: false
+  loading: true
 }
 
 export default function authReducer(

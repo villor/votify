@@ -72,7 +72,7 @@ namespace Votify.Api
             services.AddScoped<ISpotifyService, SpotifyService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRoomService, RoomService>();
-
+            
             services.AddSingleton<IRoomConnectionSingleton, RoomConnectionSingleton>();
         }
 

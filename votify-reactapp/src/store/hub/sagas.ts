@@ -44,7 +44,7 @@ function hubChannel(conn: signalR.HubConnection) {
 
 function* hubSaga(action: AuthSetTokenAction) {
   const connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:44378/roomHub', { accessTokenFactory: () => action.jwt })
+      .withUrl('https://localhost:44304/roomHub', { accessTokenFactory: () => action.jwt })
       .build()
   const chan = yield call(hubChannel, connection)
   
