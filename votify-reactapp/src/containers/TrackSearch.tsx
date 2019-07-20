@@ -39,7 +39,7 @@ export const TrackSearch: React.FC<TrackSearchProps> = ({ onSelectTrack }) => {
       <input placeholder='Search tracks' onChange={e => setSearchTerm(e.target.value)} />
       {isSearching && <div>Searching...</div>}
       {results.map((track) => (
-        <Track key={track.id} name={track.name} artists={track.artists[0].name} onClick={() => { onSelectTrack(track.id); }} />
+        <Track key={track.id} spotifyTrack={track} onClick={() => { onSelectTrack(track.id); }} />
       ))}
     </div>
   )

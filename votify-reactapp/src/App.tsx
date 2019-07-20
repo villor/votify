@@ -17,15 +17,22 @@ const App: React.FC = () => {
     dispatch(authStart())
   }, [dispatch])
 
-  if (authState.loading) {
-    return <p>Loading...</p>;
+  const render = () => {
+    if (authState.loading) {
+      return <p>Loading...</p>;
+    }
+  
+    if (!authState.authenticated) {
+      return <p>Not logged in to spotify. Please <button onClick={() => { dispatch(authLogin()) }}>log in</button></p>;
+    }
+
+    return <Room code="fjert" />
   }
 
-  if (!authState.authenticated) {
-    return <p>Not logged in to spotify. Please <button onClick={() => { dispatch(authLogin()) }}>log in</button></p>;
-  }
-
-  return <Room code="fjert" />
+  return <div className="app">
+    <h1>Votify</h1>
+    {render()}
+  </div>
 }
 
 export default App

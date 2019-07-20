@@ -4,6 +4,8 @@ import { AppState } from '../store'
 import { getQueue } from '../store/room/selectors'
 import { addTrack } from '../api/room'
 import TrackSearch from './TrackSearch'
+import Track from '../components/Track'
+import Player from '../components/Player'
 
 interface RoomProps {
   code: string
@@ -19,6 +21,7 @@ export const Room: React.FC<RoomProps> = (props) => {
   }, [props.code, dispatch])
 
   return <div>
+    <h2>{roomState.name}</h2>
     <button onClick={() => dispatch({ type: 'PLAYER_INIT', name: 'Votify' })}>PLAYER_INIT</button>
     <button onClick={() => dispatch({ type: 'PLAYER_PLAY_NEXT' })}>PLAY_NEXT</button>
     <button onClick={() => dispatch({ type: 'AUTH_LOGOUT', jwt: null })}>Log out</button>
@@ -27,9 +30,9 @@ export const Room: React.FC<RoomProps> = (props) => {
     <div>Name: {roomState.name}</div>
     <TrackSearch onSelectTrack={(spotifyTrackId: string) => { addTrack(roomState.code!, spotifyTrackId) }} />
     <h2>Queue:</h2>
-    {queue.map(track => <div key={track.id}>
-      {track.loading ? 'Loading...' : track.spotifyTrack!.name} - {track.votes} votes
-    </div>)}
+    <div className="queue">
+      {queue.map(track => <Track spotifyTrack={track.spotifyTrack} />)}
+    </div>
   </div>
 }
 

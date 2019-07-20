@@ -1,0 +1,81 @@
+@import-normalize;
+
+$text-color: white;
+$text-dark: rgb(160,160,160);
+$spotify-green: #1DB954;
+$bg-dark: rgb(18,18,18);
+$bg-medium: rgb(24,24,24);
+$bg-bright: rgb(40,40,40);
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: $bg-dark;
+  color: $text-color;
+  text-align: center;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.track {
+  position: relative;
+  text-align: left;
+  background: $bg-bright;
+  height: 64px;
+  margin-bottom: 10px;
+
+  &.clickable {
+    &:hover {
+      background: lighten($bg-bright, 5%);
+      cursor: pointer;
+    }
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+  }
+
+  .track-names {
+    position: absolute;
+    top: 0;
+    left: 85px;
+    width: 500px - 64px;
+
+    div {
+      position: absolute;
+      width: 100%;
+      padding-right: 25px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    div:first-child {
+      top: 0;
+      left: 0;
+      height: 36px;
+      padding-top: 14px;
+    }
+
+    div:last-child {
+      top: 36px;
+      left: 0;
+      height: 28px;
+      font-size: 0.8em;
+      color: $text-dark;
+    }
+  }
+}
