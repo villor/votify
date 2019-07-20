@@ -1,10 +1,12 @@
-import { all, put, takeLatest, call, take, apply, select } from 'redux-saga/effects'
+import { all, put, takeLatest, call, take, apply, select, delay } from 'redux-saga/effects'
 import { loginRedirect, checkPendingAuth, getTokenFromSpotifyCallback, refreshToken } from '../../api/auth'
 import { eventChannel } from 'redux-saga';
-import { AUTH_START, AUTH_SET_TOKEN, AUTH_ERROR, AUTH_DONE, AUTH_LOGIN, AUTH_LOGOUT } from './types';
+import { AUTH_START, AUTH_SET_TOKEN, AUTH_ERROR, AUTH_DONE, AUTH_LOGIN, AUTH_LOGOUT, AuthSetTokenAction } from './types';
 import { AppState } from '..';
+import { getRandomInteger } from '../../util/number';
 
 const getRefreshToken = (state: AppState) => state.auth.claims!.spotifyRefreshToken
+const getTokenExpiry = (state: AppState) => state.auth.claims!.exp
 
 function localStorageTokenChannel() {
   return eventChannel(emit => {
@@ -59,12 +61,22 @@ function* watchLogout() {
   })
 }
 
-function* watchRefreshToken() {
-  yield takeLatest('AUTH_REFRESH_TOKEN', function* () {
-    const rToken: string = yield select(getRefreshToken)
-    const jwt = yield call(refreshToken, rToken)
-    yield put({ type: AUTH_SET_TOKEN, jwt })
-    yield apply(window.localStorage, 'setItem', ['jwt', jwt])
+function* refreshTokenSaga() {
+  const rToken: string = yield select(getRefreshToken)
+  const jwt = yield call(refreshToken, rToken)
+  yield put({ type: AUTH_SET_TOKEN, jwt })
+  yield apply(window.localStorage, 'setItem', ['jwt', jwt])
+}
+
+function* watchSetToken() {
+  yield takeLatest(AUTH_SET_TOKEN, function* (action: AuthSetTokenAction) {
+    if (action.jwt) {
+      const tokenExpiry: number = yield select(getTokenExpiry)
+      const now = Math.floor(new Date().getTime() / 1000)
+      const waitTime = Math.max(0, tokenExpiry - now - getRandomInteger(0, 600))
+      yield delay(waitTime * 1000)
+      yield call(refreshTokenSaga)
+    }
   });
 }
 
@@ -73,6 +85,6 @@ export default function* authSaga() {
     authFlow(),
     watchLogin(),
     watchLogout(),
-    watchRefreshToken(),
+    watchSetToken(),
   ])
 }
