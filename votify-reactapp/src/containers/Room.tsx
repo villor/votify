@@ -5,7 +5,6 @@ import { getQueue } from '../store/room/selectors'
 import { addTrack } from '../api/room'
 import TrackSearch from './TrackSearch'
 import Track from '../components/Track'
-import Player from '../components/Player'
 
 interface RoomProps {
   code: string
@@ -24,7 +23,6 @@ export const Room: React.FC<RoomProps> = (props) => {
     <h2>{roomState.name}</h2>
     <button onClick={() => dispatch({ type: 'PLAYER_INIT', name: 'Votify' })}>PLAYER_INIT</button>
     <button onClick={() => dispatch({ type: 'PLAYER_PLAY_NEXT' })}>PLAY_NEXT</button>
-    <button onClick={() => dispatch({ type: 'AUTH_LOGOUT', jwt: null })}>Log out</button>
     <div>Loading: {roomState.loading ? 'true' : 'false'}</div>
     <div>Code: {roomState.code}</div>
     <div>Name: {roomState.name}</div>

@@ -1,16 +1,16 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect} from 'react'
 import { useSelector } from 'react-redux'
-import { AppState } from '../store'
-import useDebounce from '../hooks/useDebounce';
-import Track from '../components/Track';
-import { SpotifyTrack, searchTracks } from '../api/spotify';
+import useDebounce from '../hooks/useDebounce'
+import Track from '../components/Track'
+import { SpotifyTrack, searchTracks } from '../api/spotify'
+import { getSpotifyAccessToken } from '../store/auth/selectors'
 
 export interface TrackSearchProps {
   onSelectTrack: (spotifyTrackId: string) => void
 }
 
 export const TrackSearch: React.FC<TrackSearchProps> = ({ onSelectTrack }) => {
-  const accessToken = useSelector((state: AppState) => state.auth.claims!.spotifyAccessToken);
+  const accessToken = useSelector(getSpotifyAccessToken);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState<SpotifyTrack[]>([]);
@@ -20,7 +20,7 @@ export const TrackSearch: React.FC<TrackSearchProps> = ({ onSelectTrack }) => {
   useEffect(() => {
     if (debouncedSearchTerm) {
       setIsSearching(true);
-      searchTracks(accessToken, debouncedSearchTerm)
+      searchTracks(accessToken!, debouncedSearchTerm)
         .then(searchResult => setResults(searchResult.items))
         .catch(err => {
           console.error(err)

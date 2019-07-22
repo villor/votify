@@ -1,5 +1,10 @@
 const apiBase = 'https://localhost:44304/api/'
 
+export interface ApiSpotifyClientCredentials {
+  accessToken: string,
+  exp: number
+}
+
 /**
  * Adds a pending authorization to the session storage and redirects the user to the Spotify authorization page
  */
@@ -78,4 +83,8 @@ export async function refreshToken(refreshToken: string): Promise<string> {
     }
   }).then(r => r.json())
   return tokenData.token
+}
+
+export async function getClientCredentials(): Promise<ApiSpotifyClientCredentials> {
+  return await fetch(apiBase + 'token/clientCredentials').then(r => r.json());
 }

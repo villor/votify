@@ -7,11 +7,13 @@ import {
   AUTH_SET_TOKEN,
   AUTH_DONE,
   AUTH_LOGIN,
+  AUTH_SET_CLIENT_CREDS,
 } from './types'
 
 const initialState: AuthState = {
   authenticated: false,
-  loading: true
+  loading: true,
+  clientCreds: null
 }
 
 export default function authReducer(
@@ -28,6 +30,8 @@ export default function authReducer(
         return {...state, authenticated: true, jwt: action.jwt, claims: jwt_decode(action.jwt)}
       }
       return {...state, authenticated: false, jwt: undefined, claims: undefined }
+    case AUTH_SET_CLIENT_CREDS:
+      return {...state, clientCreds: action.clientCreds }
     case AUTH_DONE:
       return {...state, loading: false}
     case AUTH_LOGIN:

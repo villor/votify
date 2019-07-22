@@ -1,9 +1,8 @@
-import { put, takeLatest, call, take, race, select } from 'redux-saga/effects'
+import { put, call, take, race, select } from 'redux-saga/effects'
 import * as signalR from '@aspnet/signalr';
 import { eventChannel, END } from 'redux-saga';
 
 import { HUB_CONNECTED, HUB_ADD_TRACK, HUB_REMOVE_TRACK, HUB_PLAYER_STATE, HUB_NEW_CONNECTION } from './types'
-import { AUTH_SET_TOKEN, AuthSetTokenAction } from '../auth/types'
 import { ROOM_JOINED, RoomJoinedAction } from '../room/types'
 import { AppState } from '..';
 
@@ -42,12 +41,9 @@ function hubChannel(conn: signalR.HubConnection) {
   })
 }
 
-function* hubSaga(action: AuthSetTokenAction) {
-  if (!action.jwt)
-    return
-
+export default function* hubSaga() {
   const connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:44304/roomHub', { accessTokenFactory: () => action.jwt })
+      .withUrl('https://localhost:44304/roomHub')
       .build()
   const chan = yield call(hubChannel, connection)
   
@@ -74,8 +70,4 @@ function* hubSaga(action: AuthSetTokenAction) {
     chan.close()
     connection.stop()
   }
-}
-
-export default function* tokenWatcher() {
-  yield takeLatest(AUTH_SET_TOKEN, hubSaga)
 }

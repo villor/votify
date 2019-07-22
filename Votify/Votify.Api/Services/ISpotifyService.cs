@@ -12,6 +12,7 @@ namespace Votify.Api.Services
         string AccessToken { get; set; }
         Task<SpotifyTokens> RequestTokensAsync(TokenRequest tokenRequest);
         Task<SpotifyTokens> RefreshTokenAsync(string refreshToken);
+        Task<SpotifyTokens> GetClientCredentialsAsync();
         Task<UserPrivate> GetMeAsync();
     }
 }

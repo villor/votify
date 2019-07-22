@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Votify.Api.ApiModels;
 using Votify.Api.Services;
 using Votify.Api.SettingsModels;
+using Votify.Api.SpotifyModels;
 
 namespace Votify.Api.Controllers
 {
@@ -18,11 +19,13 @@ namespace Votify.Api.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IAuthService _authService;
+        private readonly ISpotifyService _spotifyService;
 
-        public TokenController(IConfiguration config, IAuthService authService)
+        public TokenController(IConfiguration config, IAuthService authService, ISpotifyService spotifyService)
         {
             _config = config;
             _authService = authService;
+            _spotifyService = spotifyService;
         }
 
         [AllowAnonymous]
@@ -80,6 +83,17 @@ namespace Votify.Api.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        [HttpGet, Route("clientCredentials")]
+        public async Task<ActionResult<SpotifyTokens>> GetClientCredentials()
+        {
+            var clientCreds = await _spotifyService.GetClientCredentialsAsync();
+            return Ok(new
+            {
+                clientCreds.AccessToken,
+                Exp = DateTimeOffset.UtcNow.AddSeconds(clientCreds.ExpiresIn).ToUnixTimeMilliseconds(),
+            });
         }
     }
 }

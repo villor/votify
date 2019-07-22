@@ -1,17 +1,15 @@
 import { all, select, call, put, takeLatest, takeEvery } from 'redux-saga/effects'
-import { AppState } from '../'
 import { ROOM_JOIN, ROOM_JOINED, RoomJoinAction, ROOM_SPOTIFY_TRACKS, ROOM_ADD_TRACK, ROOM_REMOVE_TRACK, ROOM_PLAYER_STATE } from './types'
 import { HUB_ADD_TRACK, HubAddTrackAction, HUB_REMOVE_TRACK, HubRemoveTrackAction, HubPlayerStateAction, HUB_PLAYER_STATE } from '../hub/types'
 import { getSpotifyTracks } from '../../api/spotify'
 import { getRoom, ApiRoom } from '../../api/room'
 import { chunk } from '../../util/array'
-
-const getAccessToken = (state: AppState): string => state.auth.claims!.spotifyAccessToken!
+import { getSpotifyAccessToken } from '../auth/selectors'
 
 function* requestSpotifyTracks(spotifyTrackIds: string[]) {
-  const accessToken: ReturnType<typeof getAccessToken> = yield select(getAccessToken)
+  const accessToken: ReturnType<typeof getSpotifyAccessToken> = yield select(getSpotifyAccessToken)
   for (const trackIds of chunk(spotifyTrackIds, 50)) {
-    const spotifyTracks = yield call(getSpotifyTracks, accessToken, trackIds)
+    const spotifyTracks = yield call(getSpotifyTracks, accessToken!, trackIds)
     if (spotifyTracks.length) {
       yield put({ type: ROOM_SPOTIFY_TRACKS, spotifyTracks })
     }

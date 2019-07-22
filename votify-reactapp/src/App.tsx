@@ -21,12 +21,11 @@ const App: React.FC = () => {
     if (authState.loading) {
       return <p>Loading...</p>;
     }
-  
-    if (!authState.authenticated) {
-      return <p>Not logged in to spotify. Please <button onClick={() => { dispatch(authLogin()) }}>log in</button></p>;
-    }
 
-    return <Room code="fjert" />
+    return <div>
+        {authState.authenticated ? <button onClick={() => dispatch({ type: 'AUTH_LOGOUT', jwt: null })}>Log out</button> : <button onClick={() => { dispatch(authLogin()) }}>Log in</button>}
+        <Room code="fjert" />
+      </div>
   }
 
   return <div className="app">
