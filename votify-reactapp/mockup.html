@@ -1,0 +1,161 @@
+<style>
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: rgb(18,18,18);
+  color: white;
+  padding: 15px;
+}
+
+.app-bar {
+  display: flex;
+  align-items: center;
+}
+
+.search {
+  margin-left: auto;
+}
+
+.search input {
+  background: #444;
+  border: 0;
+  border-radius: 10px;
+  padding: 8px;
+  color: white;
+  width: 200px;
+  outline: none;
+}
+
+.search input:focus {
+  width: 250px;
+}
+
+.button {
+  background: rgb(40,40,40);
+  border: 0;
+  color: #ccc;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 10px;
+  outline: 0;
+  margin-right: 5px;
+}
+
+.button:hover, .button:focus {
+  background: rgb(50,50,50);
+}
+
+.player {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.player .cover {
+  height: 300px;
+  width: 300px;
+}
+
+.player .track-name {
+  margin-top: 15px;
+  font-size: 22px;
+}
+
+.player .artist {
+  margin-top: 6px;
+  font-size: 18px;
+  color: rgb(160,160,160);
+}
+
+.player .position-duration {
+  display: flex;
+  align-items: center;
+  width: 350px;
+  margin: 30px auto;
+}
+
+.player .position-duration .position-bar {
+  flex: 1;
+  margin: 0 15px;
+  background: #eee;
+  height: 3px;
+}
+
+.queue {
+  max-width: 650px;
+  margin: 40px auto;
+}
+
+.track {
+  background: rgb(40,40,40);
+  height: 64px;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.track img {
+  height: 100%;
+}
+
+.track-info {
+  padding: 8px 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.track-info div:first-child {
+  font-size: 19px;
+}
+
+.track-info div:last-child {
+  color: rgb(160,160,160);
+}
+</style>
+<div class="app-bar">
+  <button class="button">Log out</button>
+  <button class="button">Play/pause</button>
+  <button class="button">Next track</button>
+  <div class="search">
+    <input placeholder="Search tracks..."></input>
+  </div>
+</div>
+<div class="player">
+  <img class="cover" src="https://i.scdn.co/image/77eb7c17cafe5503150e1e4de7b4614b90c934be">
+    <div class="track-name">I Give You the Morning</div>
+    <div class="artist">Kite</div>
+    <div class="position-duration">
+      <div>00:05</div>
+      <div class="position-bar"></div>
+      <div>05:39</div>
+    </div>
+</div>
+<div class="queue">
+  <div class="track">
+    <img src="https://i.scdn.co/image/77eb7c17cafe5503150e1e4de7b4614b90c934be">
+    <div class="track-info">
+      <div>Conquer or Suffer</div>
+      <div>Nicole Sabouné</div>
+    </div>
+  </div>
+  <div class="track">
+    <img src="https://i.scdn.co/image/77eb7c17cafe5503150e1e4de7b4614b90c934be">
+    <div class="track-info">
+      <div>Conquer or Suffer</div>
+      <div>Nicole Sabouné</div>
+    </div>
+  </div>
+  <div class="track">
+    <img src="https://i.scdn.co/image/77eb7c17cafe5503150e1e4de7b4614b90c934be">
+    <div class="track-info">
+      <div>Conquer or Suffer</div>
+      <div>Nicole Sabouné</div>
+    </div>
+  </div>
+</div>
