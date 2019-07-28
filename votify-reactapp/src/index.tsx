@@ -1,9 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import './index.scss'
 import configureStore from './store'
-import App from './App'
+import App from './components/App'
 
 const store = configureStore()
 

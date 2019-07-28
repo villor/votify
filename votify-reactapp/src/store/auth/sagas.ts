@@ -82,6 +82,7 @@ function* watchSetToken() {
       const tokenExpiry: number = yield select(getTokenExpiry)
       const now = Math.floor(new Date().getTime() / 1000)
       const waitTime = Math.max(0, tokenExpiry - now - getRandomInteger(0, 600))
+      console.log(waitTime)
       yield delay(waitTime * 1000)
       yield call(refreshTokenSaga)
     }
