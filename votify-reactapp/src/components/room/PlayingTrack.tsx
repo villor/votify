@@ -1,33 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ApiPlayerState } from '../../api/room'
 import styled from 'styled-components';
 import { msToMMSS } from '../../util/time'
+import useInterval from '../../hooks/useInterval';
 
 interface PlayingTrackProps {
   playerState: ApiPlayerState | null
+  lastUpdate: Date
 }
 
-export const PlayingTrack: React.FC<PlayingTrackProps> = ({ playerState }) => {
-  const render = () => {
-    if (!playerState || !playerState.spotifyTrackId) {
-      return <p>No track info</p>
-    }
-    return <React.Fragment>
-      <Cover src={playerState.spotifyTrackImageUrl} />
-      <TrackName>{playerState.spotifyTrackName}</TrackName>
-      <Artist>{playerState.spotifyTrackArtist}</Artist>
-      <PositionDuration>
-        <div>{msToMMSS(playerState.position)}</div>
-        <PositionDurationBar
-          position={playerState.position}
-          duration={playerState.duration} />
-        <div>{msToMMSS(playerState.duration)}</div>
-      </PositionDuration>
-    </React.Fragment>
+export const PlayingTrack: React.FC<PlayingTrackProps> = ({ playerState, lastUpdate }) => {
+  const [calculatedPosition, setCalculatedPosition] = useState(playerState ? playerState.position : null)
+  useInterval(() => {
+    if (!playerState)
+      return
+    setCalculatedPosition(playerState.paused ? playerState.position : playerState.position + (Number(new Date()) - Number(lastUpdate)))
+  }, !playerState || playerState.paused ? null : 1000)
+
+  if (!playerState || !playerState.spotifyTrackId) {
+    return <StyledPlayingTrack><p>No track info</p></StyledPlayingTrack>
   }
 
   return <StyledPlayingTrack>
-    {render()}
+    <Cover src={playerState.spotifyTrackImageUrl} />
+    <TrackName>{playerState.spotifyTrackName}</TrackName>
+    <Artist>{playerState.spotifyTrackArtist}</Artist>
+    <PositionDuration>
+      <div>{msToMMSS(calculatedPosition!)}</div>
+      <PositionDurationBar
+        position={calculatedPosition!}
+        duration={playerState.duration} />
+      <div>{msToMMSS(playerState.duration)}</div>
+    </PositionDuration>
   </StyledPlayingTrack>
 }
 
@@ -70,6 +74,7 @@ const PositionDurationBar = styled.div<PositionDurationBarProps>`
   position: relative;
 
   &::after {
+    content: ' ';
     position: absolute;
     top: 0;
     left: 0;

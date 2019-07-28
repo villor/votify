@@ -37,7 +37,7 @@ export const Room: React.FC<RoomProps> = (props) => {
       
       <TrackSearch onSelectTrack={(spotifyTrackId: string) => { addTrack(roomState.code!, spotifyTrackId) }} />
     </TopSection>
-    <PlayingTrack playerState={roomState.playerState} />
+    <PlayingTrack playerState={roomState.playerState} lastUpdate={roomState.playerStateUpdated}/>
     <Queue />
   </React.Fragment>
 }
