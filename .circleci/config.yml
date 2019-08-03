@@ -1,0 +1,41 @@
+version: 2.1
+  jobs:
+    build_api:
+      working_directory: ~/repo/Votify
+      docker:
+        - image: mcr.microsoft.com/dotnet/core/sdk:2.2
+      steps:
+        - checkout:
+            path: ~/repo
+        - run: dotnet restore
+        - run: dotnet build
+        - store_artifacts:
+            path: Votify\Votify.Api\bin\Release\netcoreapp2.2
+            destination: votify_api
+
+    build_app:
+      working_directory: ~/repo/votify-reactapp
+      docker:
+        - image: circleci/node:4.8.2
+      steps:
+        - checkout:
+            path: ~/repo
+        - run:
+            name: update-npm
+            command: 'sudo npm install -g npm@latest'
+        - restore_cache:
+            key: dependency-cache-{{ checksum "package.json" }}
+        - run:
+            name: npm install
+            command: npm install
+        - save_cache:
+            key: dependency-cache-{{ checksum "package.json" }}
+            paths:
+              - ./node_modules
+        - run:
+            name: npm run build
+            command: npm run build
+        - store_artifacts:
+            path: build
+            destination: votify_app
+          
