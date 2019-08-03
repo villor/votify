@@ -81,19 +81,14 @@ namespace Votify.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
+                app.UseCors(policy => policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials());
             }
 
-            app.UseHttpsRedirection();
-            app.UseCors(policy => policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials());
             app.UseAuthentication();
             app.UseMiddleware<SpotifyMiddleware>();
             app.UseSignalR(routes =>
             {
-                routes.MapHub<RoomHub>("/roomHub");
+                routes.MapHub<RoomHub>("/api/roomHub");
             });
             app.UseMvc();
         }

@@ -1,4 +1,4 @@
-const apiBase = 'https://localhost:44304/api/';
+const API_URL = process.env.REACT_APP_VOTIFY_API_URL
 
 export interface ApiPlayerState {
   paused: boolean
@@ -26,11 +26,11 @@ export interface ApiRoom {
 }
 
 export async function getRoom(roomCode: string): Promise<ApiRoom> {
-  return await fetch(apiBase + 'rooms/' + roomCode).then(r => r.json())
+  return await fetch(API_URL + 'rooms/' + roomCode).then(r => r.json())
 }
 
 export async function addTrack(roomCode: string, spotifyTrackId: string): Promise<void> {
-  await fetch(apiBase + 'rooms/' + roomCode + '/tracks', {
+  await fetch(API_URL + 'rooms/' + roomCode + '/tracks', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -41,13 +41,13 @@ export async function addTrack(roomCode: string, spotifyTrackId: string): Promis
 }
 
 export async function removeTrack(roomCode: string, trackId: number): Promise<void> {
-  await fetch(apiBase + 'rooms/' + roomCode + '/tracks/' + trackId, {
+  await fetch(API_URL + 'rooms/' + roomCode + '/tracks/' + trackId, {
     method: 'DELETE'
   })
 }
 
 export async function updatePlayerState(roomCode: string, playerState: ApiPlayerState): Promise<void> {
-  await fetch(apiBase + 'rooms/' + roomCode + '/playerState', {
+  await fetch(API_URL + 'rooms/' + roomCode + '/playerState', {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',

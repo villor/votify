@@ -1,4 +1,5 @@
-const apiBase = 'https://localhost:44304/api/'
+const API_URL = process.env.REACT_APP_VOTIFY_API_URL
+const REDIRECT_URI = window.location.origin + '/callback'
 
 export interface ApiSpotifyClientCredentials {
   accessToken: string,
@@ -9,7 +10,7 @@ export interface ApiSpotifyClientCredentials {
  * Adds a pending authorization to the session storage and redirects the user to the Spotify authorization page
  */
 export function loginRedirect(): void {
-  fetch(apiBase + 'token/info')
+  fetch(API_URL + 'token/info')
     .then(r => r.json())
     .then(tokenInfo => {
       const state = Math.random().toString(36).substring(2, 15)
@@ -17,7 +18,7 @@ export function loginRedirect(): void {
         state: state,
         origin: window.location.href
       }))
-      const redirectUri = 'http%3A%2F%2Flocalhost%3A3000%2Fcallback'
+      const redirectUri = encodeURIComponent(REDIRECT_URI)
       const scope = encodeURIComponent(tokenInfo.scope)
       window.location.href = `https://accounts.spotify.com/authorize?client_id=${tokenInfo.clientId}&response_type=code&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`
     })
@@ -57,7 +58,7 @@ export async function getTokenFromSpotifyCallback(): Promise<string | null> {
     if (spotifyCallback.error) {
       throw new Error('Spotify callback error: ' + spotifyCallback.error)
     } else {
-      const tokenData = await fetch(apiBase + 'token/request', {
+      const tokenData = await fetch(API_URL + 'token/request', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -65,7 +66,7 @@ export async function getTokenFromSpotifyCallback(): Promise<string | null> {
         },
         body: JSON.stringify({
           code: spotifyCallback.code,
-          redirectUri: 'http://localhost:3000/callback'
+          redirectUri: REDIRECT_URI
         })
       }).then(r => r.json())
       return tokenData.token
@@ -75,7 +76,7 @@ export async function getTokenFromSpotifyCallback(): Promise<string | null> {
 }
 
 export async function refreshToken(refreshToken: string): Promise<string> {
-  const tokenData = await fetch(apiBase + 'token/refresh?refreshToken=' + refreshToken, {
+  const tokenData = await fetch(API_URL + 'token/refresh?refreshToken=' + refreshToken, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -86,5 +87,5 @@ export async function refreshToken(refreshToken: string): Promise<string> {
 }
 
 export async function getClientCredentials(): Promise<ApiSpotifyClientCredentials> {
-  return await fetch(apiBase + 'token/clientCredentials').then(r => r.json());
+  return await fetch(API_URL + 'token/clientCredentials').then(r => r.json());
 }

@@ -6,6 +6,8 @@ import { HUB_CONNECTED, HUB_ADD_TRACK, HUB_REMOVE_TRACK, HUB_PLAYER_STATE, HUB_N
 import { ROOM_JOINED, RoomJoinedAction } from '../room/types'
 import { AppState } from '..';
 
+const API_URL = process.env.REACT_APP_VOTIFY_API_URL
+
 const getRoomCode = (state: AppState): string | undefined => state.room.code
 
 function hubChannel(conn: signalR.HubConnection) {
@@ -43,7 +45,7 @@ function hubChannel(conn: signalR.HubConnection) {
 
 export default function* hubSaga() {
   const connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:44304/roomHub')
+      .withUrl(API_URL + 'roomHub')
       .build()
   const chan = yield call(hubChannel, connection)
   
