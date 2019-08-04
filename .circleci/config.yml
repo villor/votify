@@ -42,11 +42,30 @@ jobs:
             - build
 
   deploy:
-    machine:
-      enabled: true
+    docker:
+      - image: cibuilds/hugo:0.42.1
     steps:
-      - run: ls
-          
+      - attach_workspace:
+          at: /tmp/workspace
+      - add_ssh_keys
+      - run:
+          name: Deploy API files
+          command: |
+            rsync -va --delete /tmp/workspace/netcoreapp2.2/ $SSH_USER@$SSH_HOST:/docker/votify/votify_api/netcoreapp2.2
+      - run:
+          name: Deploy app files
+          command: |
+            rsync -va --delete /tmp/workspace/build/ $SSH_USER@$SSH_HOST:/docker/votify/votify_static/build
+      - run:
+          name: Rebuild/restart containers
+          command: |
+            ssh $SSH_USER@$SSH_HOST <<'ENDSSH'
+            cd /docker/votify
+            docker-compose down
+            docker-compose build
+            docker-compose up
+            ENDSSH
+
 workflows:
   version: 2.1
   build_and_deploy:
