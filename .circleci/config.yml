@@ -45,7 +45,7 @@ jobs:
     machine:
       enabled: true
     steps:
-      run: ls
+      - run: ls
           
 workflows:
   version: 2.1
