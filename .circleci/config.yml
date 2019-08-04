@@ -63,12 +63,12 @@ jobs:
       - run:
           name: Rebuild/restart containers
           command: |
-            ssh $SSH_USER@$SSH_HOST \<<'ENDSSH'
+            ssh $SSH_USER@$SSH_HOST /bin/bash \<<'EOT'
             cd /docker/votify
             docker-compose down
             docker-compose build
             docker-compose up -d
-            ENDSSH
+            EOT
 
 workflows:
   version: 2.1
