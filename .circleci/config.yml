@@ -10,13 +10,13 @@ jobs:
       - run: dotnet restore
       - run: dotnet build
       - store_artifacts:
-          path: Votify\Votify.Api\bin\Release\netcoreapp2.2
+          path: Votify.Api/bin/Release/netcoreapp2.2
           destination: votify_api
 
   build_app:
     working_directory: ~/repo/votify-reactapp
     docker:
-      - image: circleci/node:4.8.2
+      - image: circleci/node:11.10.0
     steps:
       - checkout:
           path: ~/repo
