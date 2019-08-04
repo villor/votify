@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Rebuild/restart containers
           command: |
-            ssh $SSH_USER@$SSH_HOST <<'ENDSSH'
+            ssh $SSH_USER@$SSH_HOST \<<'ENDSSH'
             cd /docker/votify
             docker-compose down
             docker-compose build
