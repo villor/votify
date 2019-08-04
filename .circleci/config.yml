@@ -49,6 +49,10 @@ jobs:
           at: /tmp/workspace
       - add_ssh_keys
       - run:
+          name: Set up known_hosts
+          command: |
+            ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts
+      - run:
           name: Deploy API files
           command: |
             rsync -va --delete /tmp/workspace/netcoreapp2.2/ $SSH_USER@$SSH_HOST:/docker/votify/votify_api/netcoreapp2.2
