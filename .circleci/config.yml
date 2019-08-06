@@ -49,9 +49,9 @@ jobs:
           at: /tmp/workspace
       - add_ssh_keys
       - run:
-          name: set up known_hosts
+          name: Add host to known hosts
           command: |
-            ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts
+            echo $SSH_HOST_KEY > ~/.ssh/known_hosts
       - run:
           name: rsync API files
           command: |
