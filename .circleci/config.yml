@@ -64,7 +64,7 @@ jobs:
       - run:
           name: docker-compose down
           command: |
-            ssh $SSH_USER@$SSH_HOST -v "docker-compose -f /docker/votify/docker-compose.yml -p votify down"
+            ssh $SSH_USER@$SSH_HOST "docker-compose -f /docker/votify/docker-compose.yml -p votify down"
       - run: sleep 1
       - run:
           name: docker-compose build
