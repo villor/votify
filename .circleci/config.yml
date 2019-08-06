@@ -43,7 +43,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cibuilds/hugo:0.42.1
+      - image: instrumentisto/rsync-ssh:latest
     steps:
       - attach_workspace:
           at: /tmp/workspace
