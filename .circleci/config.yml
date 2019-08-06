@@ -52,22 +52,25 @@ jobs:
           name: set up known_hosts
           command: |
             ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts
-     # - run:
-      #    name: rsync API files
-      #    command: |
-      #      rsync -va --delete /tmp/workspace/netcoreapp2.2/ $SSH_USER@$SSH_HOST:/docker/votify/votify_api/netcoreapp2.2
-      #- run:
-      #    name: rsync app files
-      #    command: |
-      #      rsync -va --delete /tmp/workspace/build/ $SSH_USER@$SSH_HOST:/docker/votify/votify_static/build
+      - run:
+          name: rsync API files
+          command: |
+            rsync -va --delete /tmp/workspace/netcoreapp2.2/ $SSH_USER@$SSH_HOST:/docker/votify/votify_api/netcoreapp2.2
+      - run:
+          name: rsync app files
+          command: |
+            rsync -va --delete /tmp/workspace/build/ $SSH_USER@$SSH_HOST:/docker/votify/votify_static/build
+      - run: sleep 1
       - run:
           name: docker-compose down
           command: |
             ssh $SSH_USER@$SSH_HOST -v "docker-compose -f /docker/votify/docker-compose.yml -p votify down"
+      - run: sleep 1
       - run:
           name: docker-compose build
           command: |
             ssh $SSH_USER@$SSH_HOST "docker-compose -f /docker/votify/docker-compose.yml -p votify build"
+      - run: sleep 1
       - run:
           name: docker-compose up
           command: |
