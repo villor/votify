@@ -3,23 +3,25 @@ import styled from 'styled-components'
 import { SpotifyTrack } from '../../api/spotify'
 
 export interface TrackProps {
-  spotifyTrack: SpotifyTrack | null
+  spotifyTrack: SpotifyTrack | null,
+  compact?: boolean,
 }
 
-export const Track: React.FC<TrackProps> = ({ spotifyTrack, children }) => {
+export const Track: React.FC<TrackProps> = ({ spotifyTrack, compact, children }) => {
   const imgSrc = spotifyTrack ? spotifyTrack.album.images[0].url : ''
   const name = spotifyTrack ? spotifyTrack.name : 'Loading...'
   const artist = spotifyTrack ? spotifyTrack.artists[0].name : ''
   const album = spotifyTrack ? spotifyTrack.album.name : ''
 
-  return <StyledTrack>
+  const Wrapper = compact ? StyledCompactTrack : StyledTrack
+  return <Wrapper>
     <img src={imgSrc} alt={album} />
     <div className="track-info">
       <div>{name}</div>
       <div>{artist}</div>
     </div>
     <div>{children}</div>
-  </StyledTrack>
+  </Wrapper>
 }
 
 const StyledTrack = styled.div`
@@ -38,6 +40,13 @@ const StyledTrack = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    overflow: hidden;
+
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     div:first-child {
       font-size: 19px;
@@ -51,7 +60,28 @@ const StyledTrack = styled.div`
   div:last-child {
     display: flex;
     align-items: center;
+    padding-right: 5px;
   }
 `
 
-export default Track;
+const StyledCompactTrack = styled(StyledTrack)`
+  height: 48px;
+  margin: 0;
+  font-size: 0.9em;
+
+  &:nth-child(even) {
+    background: rgb(35,35,35)
+  }
+
+  .track-info {
+    padding: 4px 12px;
+    div:first-child {
+      font-size: 14px;
+    }
+    div:last-child {
+      font-size: 13px;
+    }
+  }
+`
+
+export default Track

@@ -16,13 +16,13 @@ export interface TrackSearchProps {
 
 export const TrackSearch: React.FC<TrackSearchProps> = ({ onSelectTrack }) => {
   const ref = useRef(null)
-  const accessToken = useSelector(getSpotifyAccessToken);
+  const accessToken = useSelector(getSpotifyAccessToken)
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState<SpotifyTrack[]>([]);
-  const [isSearching, setIsSearching]= useState(false);
+  const [searchTerm, setSearchTerm] = useState('')
+  const [results, setResults] = useState<SpotifyTrack[]>([])
+  const [isSearching, setIsSearching]= useState(false)
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
   useEffect(() => {
     if (debouncedSearchTerm) {
       setIsSearching(true);
@@ -48,7 +48,7 @@ export const TrackSearch: React.FC<TrackSearchProps> = ({ onSelectTrack }) => {
     <SearchInput placeholder='Search tracks' onChange={e => setSearchTerm(e.target.value)} />
     {(results.length > 0 || isSearching) && <SearchResult>
       {results.map((track) => (
-      <Track key={track.id} spotifyTrack={track}>
+      <Track key={track.id} spotifyTrack={track} compact={true}>
         <Button onClick={() => { onSelectTrack(track.id); }}>Add...</Button>
       </Track>
     ))}
